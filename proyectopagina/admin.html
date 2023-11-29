@@ -1,0 +1,240 @@
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Datos de Pagos</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	
+	
+	<style>
+	
+	
+
+.container {
+    background-color: #f2f2f2; /* Cambiado a gris claro */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+}
+
+#consultaForm {
+    padding: 15px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.salir {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#tablaResultados {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tablaResultados th, #tablaResultados td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+#tablaResultados th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+
+#tablaFormularios {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tablaFormularios th, #tablaFormularios td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+#tablaFormularios th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+	
+	</style>
+	
+	
+</head>
+
+<body>
+    <h1>Consulta de Pagos por Propietario</h1>
+    <form id="consultaForm">
+        <label for="propietario">Nombre del Propietario:</label>
+        <input type="text" id="propietario" name="propietario" required>
+        <button type="button" onclick="consultarPagos()">Consultar Pagos</button>
+		        <br>
+		    <br>
+		
+		
+		 <a class="salir" href="registro.html">Cerrar Sesión</a>
+    </form>
+
+  
+	
+	    <h2>Formularios</h2>
+    <table border="1" id="tablaFormularios">
+        <thead>
+            <tr>
+                <th>ID </th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Mensaje</th>
+				<th>Estrellas</th>
+            </tr>
+        </thead>
+		   <tbody id="bodyFormularios">
+            <!-- Contenido de la tabla de formularios se llenará dinámicamente -->
+        </tbody>
+        
+    </table>
+				
+	
+	
+	  <h2>Huespedes</h2>
+    <table border="1" id="tablaResultados">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Pago</th>
+				<th>Ubicacion</th>
+				
+            </tr>
+        </thead>
+        <tbody id="bodyResultados">
+            
+        </tbody>
+    </table>
+	            <br>
+	         <br>
+	      <br>
+	   <br>
+	<br>
+
+       <script>
+	   
+
+	   
+	   $(document).ready(function () {
+            // Llama a la función al cargar la página para cargar los formularios
+            cargarFormularios();
+        });
+
+        function cargarFormularios() {
+            $.ajax({
+                url: 'cargar_formularios.php', // Nuevo archivo PHP para cargar formularios
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        mostrarFormularios(data);
+                    } else {
+                        $('#bodyFormularios').html('<tr><td colspan="5">No hay formularios disponibles</td></tr>');
+                    }
+                },
+                error: function () {
+                    alert('Error al cargar los formularios');
+                }
+            });
+        }
+
+        function mostrarFormularios(formularios) {
+            // Limpiar la tabla
+            $('#bodyFormularios').empty();
+
+            // Iterar sobre los resultados y agregar filas a la tabla
+            $.each(formularios, function (index, formulario) {
+                $('#bodyFormularios').append('<tr><td>' + formulario.id_formulario + '</td><td>' + formulario.nombre +
+                    '</td><td>' + formulario.correo + '</td><td>' + formulario.mensaje + '</td><td>' + formulario.estrellas + '</td></tr>');
+					
+            });
+        }
+	   
+        function consultarPagos() {
+            var propietario = $('#propietario').val();
+
+            
+            $.ajax({
+                url: 'admin.php', 
+                type: 'POST',
+                dataType: 'json',
+                data: { propietario: propietario },
+                success: function (data) {
+                    // Procesar los datos recibidos
+                    if (data && data.length > 0) {
+                        mostrarResultados(data);
+                    } else {
+                        $('#bodyResultados').html('<tr><td colspan="5">No hay resultados para el propietario ' + propietario + '</td></tr>');
+                    }
+                },
+                error: function () {
+                    alert('Error al consultar los pagos');
+                }
+            });
+        }
+
+        function mostrarResultados(resultados) {
+            // Limpiar la tabla
+            $('#bodyResultados').empty();
+
+            // Iterar sobre los resultados y agregar filas a la tabla
+            $.each(resultados, function (index, resultado) {
+                $('#bodyResultados').append('<tr><td>' + resultado.id_pagos + '</td><td>' + resultado.dateStart +
+                    '</td><td>' + resultado.endDate + '</td><td>' + resultado.precio + '</td><td>' + resultado.ubicacion + '</td></tr>');
+            });
+        }
+    </script>
+</body>
+
+</html>

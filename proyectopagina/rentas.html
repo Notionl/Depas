@@ -1,0 +1,154 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Rentas de Departamentos</title>
+	<style>
+	
+	body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+}
+
+.apartment {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.price {
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+.ubicacion {
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+a {
+background-color: black;
+color: #fff;
+border-radius: 20px;
+border: none;
+padding: 10px 15px;
+cursor: pointer;
+margin-top: 10px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+}
+	
+	</style>
+</head>
+<body>
+    <header>
+        <h1>Rentas de Departamentos</h1>
+    </header>
+
+    <section class="apartment">
+        <img src="cuarto1.jpg" alt="Apartamento 1" width="600" height="300">
+		<img src="piscina1.jpg" alt="Apartamento 1" width="600" height="300">
+        <h2>Apartamento 1</h2>
+		<p class="ubicacion">Piso 1 Departamento A</p>
+        <p>Departamento de 1 Recamara</p>
+		<p> 1 Baño</p>
+		<p>Cocina chica</p>
+		<p>Cuenta con acceso a la piscina del edificio</p>
+            <button onclick="redirectToPagos(1200, 'Piso 1 Departamento A', 'Piso 1 Departamento A')">Rentar</button>
+        <p class="price">$1200/Dia</p>
+    </section>
+
+    <section class="apartment">
+        <img src="cuart2.jpg" alt="Apartamento 2" width="600" height="300">
+		<img src="piscina.jpg" alt="Apartamento 1" width="600" height="300">
+        <h2>Apartamento 2</h2>
+		<p class="ubicacion">Piso 2 Departamento B</p>
+		<p>Departamento de 2 Recamaras</p>
+       <p> 2 Baños</p>
+		<p>Cocina Grande</p>
+		<p>Cuenta con acceso a la piscina del edificio</p>
+        <button onclick="redirectToPagos(1500, 'Piso 2 Departamento B', 'Piso 2 Departamento B')">Rentar</button>
+
+        <p class="price">$1500/Dia</p>
+		
+    </section>
+
+
+    <section class="apartment">
+        <img src="cuarto3.jpg" alt="Apartamento 3" width="600" height="300">
+		<img src="piscina1.jpg" alt="Apartamento 1" width="600" height="300">
+        <h2>Apartamento 3</h2>
+		<p class="ubicacion">Piso 3 Departamento C</p>
+        <p>Departamento de 3 Recamaras</p>
+       <p> 3 Baños</p>
+		<p>Cocina Grande</p>
+		<p>Cuenta con acceso a la piscina del edificio</p>
+        <button onclick="redirectToPagos(2000, 'Piso 3 Departamento C', 'Piso 3 Departamento C')">Rentar</button>
+
+        <p class="price">$2000/Dia</p>
+    </section>
+   
+      
+	<script>
+	
+function redirectToPagos(precio, ubicacion, nombreUbicacion) {
+    // Realiza una solicitud AJAX para verificar la disponibilidad
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "verificar_disponibilidad.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Maneja la respuesta
+            if (xhr.responseText === "ocupado") {
+                alert("Este cuarto ya está en uso");
+            } else {
+                // Si no está ocupado, redirige a la página de pagos
+                window.location.href = 'pagos.html?precio=' + precio + '&ubicacion=' + encodeURIComponent(nombreUbicacion);
+            }
+        }
+    };
+    // Envia la solicitud con el parámetro de ubicación
+    xhr.send("ubicacion=" + ubicacion);
+}
+         </script>
+	<br>
+	       <br>
+	    <br>
+	 <br>
+
+    <footer>
+        <p>Contacto: fivecrabs@gmail.com</p>  <a href="proyecto.html"> Regresar</a>
+    </footer>
+</body>
+</html>
